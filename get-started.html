@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://api.github.com; base-uri 'none'; object-src 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#ebe9e3">
+  <meta name="description" content="Install OCC, connect your SDK or OpenTelemetry Collector and start exploring telemetry. Downloads for macOS, Linux and Windows, setup examples and FAQ.">
+  <meta property="og:title" content="Get started with OCC — Install &amp; download.">
+  <meta property="og:description" content="Install OCC, connect your SDK or OpenTelemetry Collector and start exploring telemetry. Downloads for macOS, Linux and Windows, setup examples and FAQ.">
+  <meta property="og:type" content="website">
+  <title>Get started with OCC — Install &amp; download.</title>
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png?v=20261021-brand">
+  <link rel="preload" href="assets/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="styles.css?v=20261021-brand">
+  <script src="app.js?v=20261021-pages" defer></script>
+</head>
+<body class="detail-page" data-page="get-started">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="OCC home">
+      <img class="brand-mark" src="assets/logo-mark.png" width="52" height="52" alt="" aria-hidden="true">
+      <span>OCC<small>OTLP Cardinality Checker</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="index.html">Home</a><a href="explore.html">Explore</a><a href="get-started.html" aria-current="page">Get started</a>
+    </nav>
+    <div class="header-actions"><label class="theme-picker" for="theme-select">Theme<select id="theme-select" aria-label="Color theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label><a class="header-download" href="get-started.html#download">Download OCC <span aria-hidden="true">↗</span></a></div>
+  </header>
+
+  <main id="main" class="page-shell">
+    <section id="start" class="start-section" aria-labelledby="start-title"><div class="section-rail"><span><i class="square"></i> GET STARTED / INSTALL &amp; RUN</span><span class="rail-right">FROM INSTALL TO FIRST SIGNAL</span></div><div class="section-heading"><h1 class="page-title" id="start-title">Small setup.<br>Big picture.</h1><p>A standalone binary with its web UI built in.<br>No separate database or frontend server.</p></div><nav class="page-links" aria-label="On this page"><a href="#setup">Install &amp; connect ↓</a><a href="#download">Downloads ↓</a><a href="#faq">FAQ ↓</a></nav><div id="setup" class="setup-grid"><article class="setup-step"><span class="step-number">01</span><h3>Install &amp; run.</h3><div class="install-tabs" role="tablist" aria-label="Installation method"><button role="tab" id="install-tab-brew" aria-selected="true" aria-controls="install-panel" data-install="brew">Homebrew</button><button role="tab" id="install-tab-binary" aria-selected="false" aria-controls="install-panel" tabindex="-1" data-install="binary">Binary</button></div><div id="install-panel" role="tabpanel" aria-labelledby="install-tab-brew"><div class="code-block"><pre><code id="install-code">brew install fiddeb/tap/occ
+occ</code></pre><button class="copy-button" data-copy="install-code" aria-label="Copy installation commands">Copy ↗</button></div><p id="install-note" class="small-note">Homebrew on macOS and Linux. Or choose a binary for your platform below.</p></div></article><article class="setup-step"><span class="step-number">02</span><h3>Send your telemetry.</h3><p>Send OTLP directly from your application's SDK, or configure your OpenTelemetry Collector to export to OCC.</p><div class="code-block"><pre><code id="exporter-code">export OTEL_EXPORTER_OTLP_ENDPOINT=\
+  http://localhost:4318
+export OTEL_EXPORTER_OTLP_PROTOCOL=\
+  http/protobuf</code></pre><button class="copy-button" data-copy="exporter-code" aria-label="Copy exporter configuration">Copy ↗</button></div><p class="small-note">SDK example above (HTTP/protobuf). For Collector routing, use the <a href="#collector-config">configuration below</a>.</p></article><article class="setup-step"><span class="step-number">03</span><h3>Follow the signal.</h3><p>Open the built-in UI in your browser. Start with the dashboard, then explore metrics, attributes and patterns.</p><div class="local-address"><span>OPEN IN YOUR BROWSER</span><code>localhost:8090</code><span aria-hidden="true">↗</span></div><p class="small-note">The UI runs on the machine hosting OCC. Bind network interfaces and route telemetry according to your environment.</p></article></div><details id="collector-config" class="collector-config"><summary>Already using an OpenTelemetry Collector? <span aria-hidden="true">+</span></summary><div><p>Add OCC to your existing exporters and the signal pipelines you want to inspect. Keep your existing receivers, processors and backend exporters.</p><div class="code-block"><pre><code id="collector-code">exporters:
+  otlphttp/occ:
+    endpoint: http://localhost:4318
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [otlphttp/occ]
+    traces:
+      receivers: [otlp]
+      exporters: [otlphttp/occ]
+    logs:
+      receivers: [otlp]
+      exporters: [otlphttp/occ]</code></pre><button class="copy-button" data-copy="collector-code" aria-label="Copy Collector example">Copy ↗</button></div><p class="small-note">Example fragment, not a complete Collector configuration. In containers, use the OCC service address instead of localhost.</p></div></details></section>
+
+    <section id="download" class="download-section" aria-labelledby="download-title"><div class="download-heading"><span class="eyebrow">YOUR NEXT INVESTIGATION STARTS HERE.</span><h2 id="download-title">GET OCC<span aria-hidden="true">↗</span></h2><div class="release-line"><span>PUBLIC RELEASE <b data-release-version>v0.5.8</b></span><a data-release-link href="https://github.com/fiddeb/occ/releases/latest" target="_blank" rel="noopener">Release notes ↗</a></div></div><div class="download-platforms"><article><h3>macOS</h3><p>Apple Silicon or Intel</p><a data-asset="otlp_cardinality_checker-darwin-arm64.zip" href="https://github.com/fiddeb/occ/releases/download/v0.5.8/otlp_cardinality_checker-darwin-arm64.zip">Apple Silicon .zip <span aria-hidden="true">↓</span></a><a data-asset="otlp_cardinality_checker-darwin-amd64.zip" href="https://github.com/fiddeb/occ/releases/download/v0.5.8/otlp_cardinality_checker-darwin-amd64.zip">Intel .zip <span aria-hidden="true">↓</span></a></article><article><h3>Linux</h3><p>x86-64 or ARM64</p><a data-asset="otlp_cardinality_checker-linux-amd64.tar.gz" href="https://github.com/fiddeb/occ/releases/download/v0.5.8/otlp_cardinality_checker-linux-amd64.tar.gz">x86-64 .tar.gz <span aria-hidden="true">↓</span></a><a data-asset="otlp_cardinality_checker-linux-arm64.tar.gz" href="https://github.com/fiddeb/occ/releases/download/v0.5.8/otlp_cardinality_checker-linux-arm64.tar.gz">ARM64 .tar.gz <span aria-hidden="true">↓</span></a></article><article><h3>Windows</h3><p>x86-64 executable</p><a data-asset="otlp_cardinality_checker-windows-amd64.exe" href="https://github.com/fiddeb/occ/releases/download/v0.5.8/otlp_cardinality_checker-windows-amd64.exe">Download .exe <span aria-hidden="true">↓</span></a><a href="https://github.com/fiddeb/occ/releases" target="_blank" rel="noopener">All releases <span aria-hidden="true">↗</span></a></article></div><div class="download-footnote"><span>EXTRACT. RUN IN TERMINAL. OPEN LOCALHOST:8090.</span><a data-checksums href="https://github.com/fiddeb/occ/releases/download/v0.5.8/SHA256SUMS">Verify checksums ↗</a></div><p id="release-status" class="release-status" role="status">Download links point to the latest public release verified when this site was prepared.</p></section>
+
+    <section id="faq" class="faq-section" aria-labelledby="faq-title"><div class="faq-heading"><span class="eyebrow">A FEW GOOD QUESTIONS</span><h2 id="faq-title">Before you<br>press run.</h2></div><div class="faq-list"><details><summary>Does OCC replace my observability backend?<span aria-hidden="true">+</span></summary><p>OCC is a diagnostic tool for exploring telemetry structure. Keep your existing backend for long-term storage, querying and alerting. Send a copy of your telemetry to OCC when you want to investigate.</p></details><details><summary>What data does OCC retain?<span aria-hidden="true">+</span></summary><p>Collected state stays in memory until you save a session snapshot to a file. OCC retains bounded attribute value samples and example log bodies. Deep Watch records distinct values for selected keys. Only send data that your retention controls allow.</p></details><details><summary>Are cardinality numbers exact?<span aria-hidden="true">+</span></summary><p>Cardinality estimates use HyperLogLog. They describe retained observations. Metric Report findings are investigation prompts, not proof of faulty instrumentation, guaranteed savings or backend limits. Prometheus classic histogram projections are conditional what-if estimates.</p></details><details><summary>Can I send telemetry without a Collector?<span aria-hidden="true">+</span></summary><p>Yes. Point a compatible OpenTelemetry SDK directly at OCC's OTLP HTTP endpoint on port 4318 or gRPC endpoint on port 4317. A Collector is optional and useful for routing or sending a copy alongside your existing backend export.</p></details><details><summary>Where do I get updates or report an issue?<span aria-hidden="true">+</span></summary><p>Get binaries and release notes from the <a href="https://github.com/fiddeb/occ/releases" target="_blank" rel="noopener">public OCC releases</a>. Report problems in the <a href="https://github.com/fiddeb/occ/issues" target="_blank" rel="noopener">public issue tracker</a>. Versioned builds can check public releases; OCC does not install updates automatically.</p></details></div></section>
+
+  <footer class="site-footer"><a class="footer-wordmark" href="index.html" aria-label="OCC home">OCC<span aria-hidden="true">+</span></a><div><p>OTLP CARDINALITY CHECKER</p><span>Built by <a href="https://www.linkedin.com/in/fredrik-berggren-a57a8a9a" target="_blank" rel="noopener" class="author-link">Fredrik Berggren</a>. © 2025</span></div><div class="footer-links"><a href="https://github.com/fiddeb/occ" target="_blank" rel="noopener">GitHub ↗</a><a href="https://github.com/fiddeb/occ/issues" target="_blank" rel="noopener">Issues ↗</a><a href="explore.html">Explore ↗</a><a href="get-started.html">Get started ↗</a></div><div class="footer-bottom"><span>THE SHAPE OF YOUR TELEMETRY</span><span>METRICS / TRACES / LOGS</span></div></footer>
+  </main>
+  <div id="copy-status" class="copy-status" role="status" aria-live="polite"></div>
+</body>
+</html>

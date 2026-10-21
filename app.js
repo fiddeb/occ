@@ -25,8 +25,8 @@ const signals = {
 };
 
 function activateSignal(name, focus = false) {
+  if (!Object.hasOwn(signals, name)) return;
   const signal = signals[name];
-  if (!signal) return;
   document.querySelectorAll('[data-signal]').forEach((tab) => {
     const selected = tab.dataset.signal === name;
     tab.setAttribute('aria-selected', String(selected));
@@ -47,6 +47,7 @@ function activateSignal(name, focus = false) {
     item.textContent = text;
     return item;
   }));
+  window.history.replaceState(null, '', `#${name}`);
 }
 
 const installMethods = {
@@ -87,9 +88,33 @@ function bindTabs(selector, dataKey, activate) {
 }
 bindTabs('[data-signal]', 'signal', activateSignal);
 bindTabs('[data-install]', 'install', activateInstall);
-document.querySelectorAll('[data-jump-signal]').forEach((link) => {
-  link.addEventListener('click', () => activateSignal(link.dataset.jumpSignal));
-});
+
+function initializePage() {
+  const page = document.body?.dataset.page;
+  if (page === 'home') {
+    // Keep links to sections of the former single-page site useful.
+    const legacySections = {
+      explore: 'explore.html', workflow: 'explore.html#workflow',
+      start: 'get-started.html', download: 'get-started.html#download',
+      faq: 'get-started.html#faq', 'collector-config': 'get-started.html#collector-config'
+    };
+    const redirectSection = () => {
+      const section = window.location.hash.slice(1);
+      if (Object.hasOwn(legacySections, section)) window.location.replace(legacySections[section]);
+    };
+    redirectSection();
+    window.addEventListener('hashchange', redirectSection);
+  }
+  if (page === 'explore') {
+    const showLinkedSignal = () => {
+      const name = window.location.hash.slice(1);
+      if (Object.hasOwn(signals, name)) activateSignal(name);
+    };
+    showLinkedSignal();
+    window.addEventListener('hashchange', showLinkedSignal);
+  }
+  if (page === 'get-started') updatePublicRelease();
+}
 
 let copyTimer;
 document.querySelectorAll('[data-copy]').forEach((button) => {
@@ -125,6 +150,7 @@ function isReleaseUrl(value) {
 
 async function updatePublicRelease() {
   const status = document.getElementById('release-status');
+  if (!status) return;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 5000);
   try {
@@ -154,4 +180,4 @@ async function updatePublicRelease() {
     status.textContent = 'Live release lookup is unavailable. These downloads use the last verified release; check All releases for updates.';
   } finally { clearTimeout(timeout); }
 }
-updatePublicRelease();
+initializePage();
